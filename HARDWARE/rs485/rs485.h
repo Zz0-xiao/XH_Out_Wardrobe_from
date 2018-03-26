@@ -1,5 +1,5 @@
-#ifndef __RS3485_H
-#define __RS3485_H
+#ifndef __RS485_H__
+#define __RS485_H__
 
 #include "sys.h"
 
@@ -7,6 +7,11 @@
 #define BRT (65536-FOSC/9600/4)
 
 #define RS485EN     P37
+
+#define key1   P12
+#define key2   P13
+#define key3   P14
+
 
 extern u8 UART2RevData[16];
 extern u16 UART2RXDataLenth;//UART1接受数据长度

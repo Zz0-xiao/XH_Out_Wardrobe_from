@@ -1,3 +1,6 @@
+#ifndef __SYS_H__
+#define __SYS_H__
+
 #include <STC8.H>
 
 #define  u8   unsigned char	  //0-255
@@ -77,3 +80,5 @@
 #define		P7_Mode_OUT_PP(x)		(P7M1 &=~(x));(P7M0 |= (x))	//将P70~P77设置为推挽输出
 #define 	P7_Mode_HighZ(x)		(P7M1 |= (x));(P7M0 &=~(x))	//将P70~P77设置为高阻输入
 #define 	P7_Mode_OUT_OD(x)		(P7M1 |= (x));(P7M0 |= (x))	//将P70~P77设置为开漏输出
+
+#endif

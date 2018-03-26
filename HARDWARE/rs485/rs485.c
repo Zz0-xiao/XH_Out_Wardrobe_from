@@ -32,7 +32,9 @@ void Uart2Isr() interrupt 8 using 1
 
 void Uart2Init()
 {
-    P3_Mode_OUT_PP(RS485EN);
+    P3_Mode_OUT_PP(RS485EN);//485en设置位推挽输出
+    P1_Mode_PullUp(key1 | key2 | key3);//拨码开关设为输入
+
     Res(RS485EN);
 
     S2CON = 0x50;
@@ -70,6 +72,13 @@ u8 CrcProtocol(u8* pbuff)
 
     if((pbuff[0] != 'S') || ( pbuff[1] != 'D'))
         return 0;
+
+    if(pbuff[2] != (P1 & 0x1c) >> 2) // 判断是不是当前地址
+    {
+        TransmitData_API("addrErro !\r\n", 0);//测试用，就看看到时候屏蔽
+        return 0;
+    }
+
     lenth =  pbuff[HEADSIZE + 1 ] + 2;////头+2，地址+1，长度+1，校验-2
     crc = crc16_ccitt(pbuff, lenth);
 //		Uart2Send(lenth);
@@ -80,7 +89,7 @@ u8 CrcProtocol(u8* pbuff)
 //    return 0;
     if((crc / 256 == pbuff[lenth]) && (crc % 256  == pbuff[lenth + 1]))
     {
-        TransmitData_API("ok !\r\n", 0);
+        TransmitData_API("ok !\r\n", 0);//测试用，就看看到时候屏蔽
         return 1;
     } else
     {
@@ -102,19 +111,20 @@ void TransmitData_API(const void* dat, u16 datasize)
 /*******************************
 名称：UART_TransmitData_SDSES()
 功能：串口发送数据，适用于神思，自动加入SDsEs,crc
-参数：UART_HandleTypeDef *huart串口结构体
-			uint32_t 长度，只是data长度,函数中自动加5
+参数： *huart串口结构体
+			address 地址，
+			len只是data长度,函数中自动加2
 			cmdr  命令
 			data  发送数据,不包含任何协议内容，只是data数据，或数组
 返回：HAL_StatusTypeDef communication.h
 *******************************/
 u8 SendBuff[16];
-/////注意，校验的时候没有data数据，只有长度，命令，
 void TransmitData_SDSES(u8 address , u8  len, u8 cmdr , const void* dat)
 {
     u16 crc16 = 0;
     u8 sendLen = 0;
     u8 crc[2];
+
     u8* pdat = (u8*) dat;
 
     if(len == 0)
@@ -135,21 +145,17 @@ void TransmitData_SDSES(u8 address , u8  len, u8 cmdr , const void* dat)
 
 //		memcpy(SendBuff + sendLen, crc, 2);
 //    sendLen += 2;
-		//加入数据
-//    SendBuff[sendLen] = dat;
-//    sendLen++;
-//    SendBuff[sendLen] = dat;
-//    sendLen++;
-//		
-		 memcpy(SendBuff + sendLen, dat, 2);
+    //加入数据
+    memcpy(SendBuff + sendLen, dat, 2);
     sendLen += 2;
-		
+
     //crc 2字节
     crc16 = crc16_ccitt(SendBuff, sendLen);
     crc[0] = crc16 >> 8;
     crc[1] = crc16 & 0xFF;
     memcpy(SendBuff + sendLen, crc, 2);
     sendLen += 2;
+
     TransmitData_API(SendBuff, sendLen);
 }
 

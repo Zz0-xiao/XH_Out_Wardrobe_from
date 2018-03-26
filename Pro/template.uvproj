@@ -312,7 +312,7 @@
               <MiscControls></MiscControls>
               <Define></Define>
               <Undefine></Undefine>
-              <IncludePath>..\HARDWARE;..\SYSTEM;..\HARDWARE\led;..\HARDWARE\rs485</IncludePath>
+              <IncludePath>..\HARDWARE;..\SYSTEM;..\HARDWARE\key;..\HARDWARE\rs485</IncludePath>
             </VariousControls>
           </C51>
           <Ax51>
