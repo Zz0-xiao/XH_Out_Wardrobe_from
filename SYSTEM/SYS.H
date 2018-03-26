@@ -1,7 +1,7 @@
 #include <STC8.H>
 
 #define  u8   unsigned char	  //0-255
-#define  u16  unsigned short int 	//0-65536
+#define  u16  unsigned  int 	//0-65536
 #define  u32  unsigned long   //0-4294967295
 
 

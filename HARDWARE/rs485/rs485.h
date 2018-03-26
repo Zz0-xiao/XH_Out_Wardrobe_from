@@ -14,14 +14,8 @@ extern u16 UART2RXDataLenth;//UART1接受数据长度
 void Uart2Init();
 void Uart2Send(char dat);
 void Uart2SendStr(char *p);
-
+u8 CrcProtocol(u8* pbuff);
 #endif
-
-
-
-
-
-
 
 
 
