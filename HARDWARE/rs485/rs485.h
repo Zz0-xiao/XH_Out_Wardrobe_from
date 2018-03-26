@@ -16,6 +16,8 @@
 extern u8 UART2RevData[16];
 extern u16 UART2RXDataLenth;//UART1接受数据长度
 
+extern u8 addr;//UART1接受数据长度
+
 void Uart2Init();
 void Uart2Send(char dat);
 void Uart2SendStr(char *p);

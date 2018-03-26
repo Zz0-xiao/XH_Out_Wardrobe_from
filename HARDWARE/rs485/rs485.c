@@ -35,8 +35,9 @@ void Uart2Init()
     P3_Mode_OUT_PP(RS485EN);//485en设置位推挽输出
     P1_Mode_PullUp(key1 | key2 | key3);//拨码开关设为输入
 
-    Res(RS485EN);
+    Res(RS485EN);    //默认位接收模式
 
+	  IE2 |= 0x01;			// 允许串口2中断
     S2CON = 0x50;
     T2L = BRT;
     T2H = BRT >> 8;
@@ -50,7 +51,7 @@ void Uart2Send(char dat)
 
     _nop_();
     _nop_();
-    while (busy);
+    while (busy);//这里到时候加入超时
     busy = 1;
     S2BUF = dat;
     _nop_();
@@ -73,7 +74,7 @@ u8 CrcProtocol(u8* pbuff)
     if((pbuff[0] != 'S') || ( pbuff[1] != 'D'))
         return 0;
 
-    if(pbuff[2] != (P1 & 0x1c) >> 2) // 判断是不是当前地址
+    if(pbuff[2] != addr) // 判断是不是当前地址
     {
         TransmitData_API("addrErro !\r\n", 0);//测试用，就看看到时候屏蔽
         return 0;
@@ -93,7 +94,7 @@ u8 CrcProtocol(u8* pbuff)
         return 1;
     } else
     {
-//     TransmitData_API("ERRO !\r\n",0);
+        TransmitData_API("ERRO !\r\n",0);//测试用，就看看到时候屏蔽
         return 0;
     }
 }
@@ -142,20 +143,17 @@ void TransmitData_SDSES(u8 address , u8  len, u8 cmdr , const void* dat)
     //state 1字节
     SendBuff[sendLen] = cmdr;
     sendLen++;
-
 //		memcpy(SendBuff + sendLen, crc, 2);
 //    sendLen += 2;
     //加入数据
     memcpy(SendBuff + sendLen, dat, 2);
     sendLen += 2;
-
     //crc 2字节
     crc16 = crc16_ccitt(SendBuff, sendLen);
     crc[0] = crc16 >> 8;
     crc[1] = crc16 & 0xFF;
     memcpy(SendBuff + sendLen, crc, 2);
     sendLen += 2;
-
     TransmitData_API(SendBuff, sendLen);
 }
 

@@ -312,7 +312,7 @@
               <MiscControls></MiscControls>
               <Define></Define>
               <Undefine></Undefine>
-              <IncludePath>..\HARDWARE;..\SYSTEM;..\HARDWARE\key;..\HARDWARE\rs485</IncludePath>
+              <IncludePath>..\HARDWARE;..\SYSTEM;..\HARDWARE\key;..\HARDWARE\rs485;..\HARDWARE\timer</IncludePath>
             </VariousControls>
           </C51>
           <Ax51>
@@ -373,6 +373,11 @@
               <FileName>rs485.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\HARDWARE\rs485\rs485.c</FilePath>
+            </File>
+            <File>
+              <FileName>timer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\HARDWARE\timer\timer.c</FilePath>
             </File>
           </Files>
         </Group>
