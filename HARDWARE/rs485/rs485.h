@@ -17,25 +17,27 @@
 
 typedef enum
 {
-	RS485_INI = 0,
-	RS485_OK,
-	RS485_ERROR,
-	
-	RS485_BUSY,
-	RS485_UART2TIMEOUT,
-	
-	RS485_NULL,
-	RS485_HEADERROR,//头错误
-	RS485_CRCERROR,
-	RS485_BLOCK,
-	RS485_DCMOTOROK,
-	RS485_DCTIMEOUT,
-}RS485_StatusTypeDef;
+    RS485_INI = 0,
+    RS485_OK,
+    RS485_ERROR,
+
+    RS485_BUSY,
+    RS485_UART2TIMEOUT,
+
+    RS485_NULL,
+    RS485_HEADERROR,//头错误
+    RS485_CRCERROR,
+
+    RS485_BLOCK,//卡货
+    RS485_NO_GOODS,//无货
+
+
+} RS485_StatusTypeDef;
 
 
 
 extern u8 UART2RevData[16];
-extern u16 UART2RXDataLenth;//UART1接受数据长度
+extern u8 UART2RXDataLenth;//UART1接受数据长度
 
 extern u8 addr;//UART1接受数据长度
 

@@ -1,10 +1,14 @@
 #include <STC8.H>
 #include "timer.h"
 
- u16 RS485Time_1ms=0; 
+u16 RS485Time_1ms = 1;
+u16 MotorTime_1ms = 1;
 void TM3_Isr() interrupt 19 using 1
 {
-	RS485Time_1ms++;
+    if(RS485Time_1ms > 0)
+        RS485Time_1ms++;
+    if(MotorTime_1ms > 0)
+        MotorTime_1ms++;
     //测试端口
 //    P15 = !P15;
     AUXINTIF &= ~0x02;                          //清中断标志

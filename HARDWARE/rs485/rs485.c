@@ -7,7 +7,7 @@
 
 bit busy;
 u8 UART2RevData[16];
-u16 UART2RXDataLenth = 0;
+u8 UART2RXDataLenth = 0;
 
 //<神思协议定义
 //<s>协议头
@@ -25,7 +25,7 @@ void Uart2Isr() interrupt 8 using 1
     {
         S2CON &= ~0x01;
         UART2RevData[UART2RXDataLenth++] = S2BUF;
-        if(UART2RXDataLenth >= 64)
+        if(UART2RXDataLenth >= 16)
             UART2RXDataLenth--;
     }
 }
@@ -51,7 +51,7 @@ void Uart2Send(char dat)
 
     _nop_();
     _nop_();
-    while (busy);//这里到时候加入超时
+    while (busy);//这里到时候加入超时 算了，不加了麻烦
     busy = 1;
     S2BUF = dat;
     _nop_();

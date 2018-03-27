@@ -4,7 +4,7 @@
 #include "sys.h"
 
 extern u16 RS485Time_1ms;
- 
+extern u16 MotorTime_1ms;
 void TIM3_Initial();
 
 

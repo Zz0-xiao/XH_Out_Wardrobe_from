@@ -1,5 +1,6 @@
 #include "motor.h"
 #include "delay.h"
+#include "timer.h"
 
 void MotorInit()
 {
@@ -9,6 +10,7 @@ void MotorInit()
     Res(MOROT2);
     Res(MOROT2);
 }
+
 
 void MotorDriveDc(u8 number, u8 motor_mode)
 {
@@ -58,19 +60,26 @@ RS485_StatusTypeDef MotorDriveDCs(u8 motorDCNum)
 //超时再说
     while(1)
     {
-        if(P36 == 1)//有货退出
+        MotorTime_1ms++;
+        if(MotorTime_1ms > 20000)
+            return RS485_NO_GOODS;   //说明无货
+        if(P36 == 1)//有货
         {
             Delay_100ms(1);
+            MotorTime_1ms = 0;
             while(1)
             {
+                MotorTime_1ms++;
+                if(MotorTime_1ms > 20000)
+                    return RS485_BLOCK;   //说明卡货
                 if(P36 == 0)
                 {
                     MotorDriveDc(STOP, motorDCNum);
+                    MotorTime_1ms = 1;
                     return RS485_OK;
                 }
             }
         }
-//        return RS485_BLOCK;
     }
 }
 
