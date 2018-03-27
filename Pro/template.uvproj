@@ -312,7 +312,7 @@
               <MiscControls></MiscControls>
               <Define></Define>
               <Undefine></Undefine>
-              <IncludePath>..\HARDWARE;..\SYSTEM;..\HARDWARE\key;..\HARDWARE\rs485;..\HARDWARE\timer</IncludePath>
+              <IncludePath>..\HARDWARE;..\SYSTEM;..\HARDWARE\key;..\HARDWARE\rs485;..\HARDWARE\timer;..\HARDWARE\motor</IncludePath>
             </VariousControls>
           </C51>
           <Ax51>
@@ -375,9 +375,19 @@
               <FilePath>..\HARDWARE\rs485\rs485.c</FilePath>
             </File>
             <File>
+              <FileName>motor.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\HARDWARE\motor\motor.c</FilePath>
+            </File>
+            <File>
               <FileName>timer.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\HARDWARE\timer\timer.c</FilePath>
+            </File>
+            <File>
+              <FileName>process.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\HARDWARE\process.c</FilePath>
             </File>
           </Files>
         </Group>

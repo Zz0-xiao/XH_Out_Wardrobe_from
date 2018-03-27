@@ -37,7 +37,7 @@ void Uart2Init()
 
     Res(RS485EN);    //默认位接收模式
 
-	  IE2 |= 0x01;			// 允许串口2中断
+    IE2 |= 0x01;			// 允许串口2中断
     S2CON = 0x50;
     T2L = BRT;
     T2H = BRT >> 8;
@@ -66,20 +66,19 @@ void Uart2Send(char dat)
 参数：USART_TypeDef *uart 串口号 u8* pbuff 接收全部数据，不偏移
 返回：HAL_StatusTypeDef communication.h
 *******************************/
-u8 CrcProtocol(u8* pbuff)
+RS485_StatusTypeDef CrcProtocol(u8* pbuff)
 {
     u8 lenth;
     u16	crc = 0;
 
     if((pbuff[0] != 'S') || ( pbuff[1] != 'D'))
-        return 0;
+        return RS485_HEADERROR;
 
     if(pbuff[2] != addr) // 判断是不是当前地址
     {
-        TransmitData_API("addrErro !\r\n", 0);//测试用，就看看到时候屏蔽
-        return 0;
+//        TransmitData_API("addrErro !\r\n", 0);//测试用，就看看到时候屏蔽
+        return RS485_INI;  //地址错误返回默认
     }
-
     lenth =  pbuff[HEADSIZE + 1 ] + 2;////头+2，地址+1，长度+1，校验-2
     crc = crc16_ccitt(pbuff, lenth);
 //		Uart2Send(lenth);
@@ -90,12 +89,12 @@ u8 CrcProtocol(u8* pbuff)
 //    return 0;
     if((crc / 256 == pbuff[lenth]) && (crc % 256  == pbuff[lenth + 1]))
     {
-        TransmitData_API("ok !\r\n", 0);//测试用，就看看到时候屏蔽
-        return 1;
+//        TransmitData_API("ok !\r\n", 0);//测试用，就看看到时候屏蔽
+        return RS485_OK;
     } else
     {
-        TransmitData_API("ERRO !\r\n",0);//测试用，就看看到时候屏蔽
-        return 0;
+//        TransmitData_API("ERRO !\r\n",0);//测试用，就看看到时候屏蔽
+        return RS485_CRCERROR; //返回crc错误
     }
 }
 

@@ -12,6 +12,27 @@
 #define key2   P13
 #define key3   P14
 
+#define DEBUG_SESES        0x60
+#define OUT_CLOTHING_SDSES  0x61
+
+typedef enum
+{
+	RS485_INI = 0,
+	RS485_OK,
+	RS485_ERROR,
+	
+	RS485_BUSY,
+	RS485_UART2TIMEOUT,
+	
+	RS485_NULL,
+	RS485_HEADERROR,//头错误
+	RS485_CRCERROR,
+	RS485_BLOCK,
+	RS485_DCMOTOROK,
+	RS485_DCTIMEOUT,
+}RS485_StatusTypeDef;
+
+
 
 extern u8 UART2RevData[16];
 extern u16 UART2RXDataLenth;//UART1接受数据长度
@@ -21,7 +42,7 @@ extern u8 addr;//UART1接受数据长度
 void Uart2Init();
 void Uart2Send(char dat);
 void Uart2SendStr(char *p);
-u8 CrcProtocol(u8* pbuff);
+RS485_StatusTypeDef CrcProtocol(u8* pbuff);
 void TransmitData_API(const void* dat, u16 datasize);
 void TransmitData_SDSES(u8 address , u8  len, u8 cmdr , const void* dat);
 #endif
