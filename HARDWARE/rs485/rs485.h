@@ -43,7 +43,7 @@ extern u8 addr;//UART1接受数据长度
 
 void Uart2Init();
 void Uart2Send(char dat);
-void Uart2SendStr(char *p);
+//void Uart2SendStr(char *p);
 RS485_StatusTypeDef CrcProtocol(u8* pbuff);
 void TransmitData_API(const void* dat, u16 datasize);
 void TransmitData_SDSES(u8 address , u8  len, u8 cmdr , const void* dat);

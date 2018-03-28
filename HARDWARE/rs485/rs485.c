@@ -4,7 +4,7 @@
 #include "intrins.h"
 #include "utility.h"
 #include "string.h"
-
+#include "delay.h"
 bit busy;
 u8 UART2RevData[16];
 u8 UART2RXDataLenth = 0;
@@ -14,7 +14,7 @@ u8 UART2RXDataLenth = 0;
 u8 HEAD[] =  "SD";
 u8 HEADSIZE = 2;
 
-void Uart2Isr() interrupt 8 using 1
+void Uart2Isr() interrupt 8
 {
     if (S2CON & 0x02)
     {
@@ -25,7 +25,7 @@ void Uart2Isr() interrupt 8 using 1
     {
         S2CON &= ~0x01;
         UART2RevData[UART2RXDataLenth++] = S2BUF;
-        if(UART2RXDataLenth >= 16)
+        if(UART2RXDataLenth > 16)
             UART2RXDataLenth--;
     }
 }
@@ -49,13 +49,15 @@ void Uart2Send(char dat)
 {
     Set(RS485EN);
 
-    _nop_();
-    _nop_();
+//    Delay_10us(1);
     while (busy);//这里到时候加入超时 算了，不加了麻烦
     busy = 1;
+	 _nop_();
+    _nop_();
     S2BUF = dat;
     _nop_();
     _nop_();
+//	  Delay_10us(10);
     Res(RS485EN);
 }
 
@@ -89,13 +91,13 @@ RS485_StatusTypeDef CrcProtocol(u8* pbuff)
 //    return 0;
     if((crc / 256 == pbuff[lenth]) && (crc % 256  == pbuff[lenth + 1]))
     {
-        TransmitData_API("ok !\r\n", 0);//测试用，就看看到时候屏蔽
-        TransmitData_API("ok !\r\n", 0);//测试用，就看看到时候屏蔽
+//        TransmitData_API("ok !", 0);//测试用，就看看到时候屏蔽
+//        TransmitData_API("ok !", 0);//测试用，就看看到时候屏蔽
         return RS485_OK;
     } else
     {
-        TransmitData_API("ERRO !\r\n", 0); //测试用，就看看到时候屏蔽
-        TransmitData_API("ERRO !\r\n", 0); //测试用，就看看到时候屏蔽
+//        TransmitData_API("ERRO !", 0); //测试用，就看看到时候屏蔽
+//        TransmitData_API("ERRO !", 0); //测试用，就看看到时候屏蔽
         return RS485_CRCERROR; //返回crc错误
     }
 }

@@ -3,9 +3,9 @@
 
 u16 RS485Time_1ms = 1;
 u16 MotorTime_1ms = 1;
-void TM3_Isr() interrupt 19 using 2
+void TM3_Isr() interrupt 19 
 {
-//    if(RS485Time_1ms > 0)
+   if(RS485Time_1ms > 0)
         RS485Time_1ms++;
     if(MotorTime_1ms > 0)
         MotorTime_1ms++;
@@ -25,7 +25,7 @@ void TIM3_Initial()     //1毫秒@24.000MHz
 //    T3L = 0xE0;		//设置定时初值
 //    T3H = 0xB1;		//设置定时初值
     T4T3M |= 0x08;		//定时器3开始计时
-//    IE2 |= ET3;                                  //使能定时器中断
+    IE2 |= ET3;                                  //使能定时器中断
     EA = 1;
 }
 

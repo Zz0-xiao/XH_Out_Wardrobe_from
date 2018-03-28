@@ -12,7 +12,7 @@ void MotorInit()
 }
 
 
-void MotorDriveDc(u8 number, u8 motor_mode)
+void MotorDriveDc(u8 motor_mode , u8 number )
 {
     if(motor_mode == START)
     {
