@@ -4,6 +4,7 @@
 #include "intrins.h"
 #include "utility.h"
 #include "string.h"
+#include "timer.h"
 #include "delay.h"
 bit busy;
 u8 UART2RevData[16];
@@ -26,7 +27,12 @@ void Uart2Isr() interrupt 8
         S2CON &= ~0x01;
         UART2RevData[UART2RXDataLenth++] = S2BUF;
         if(UART2RXDataLenth > 16)
+        {
             UART2RXDataLenth--;
+            RS485Time_1ms = 0;
+        }
+        else
+            RS485Time_1ms = 1;
     }
 }
 
@@ -52,7 +58,7 @@ void Uart2Send(char dat)
 //    Delay_10us(1);
     while (busy);//这里到时候加入超时 算了，不加了麻烦
     busy = 1;
-	 _nop_();
+    _nop_();
     _nop_();
     S2BUF = dat;
     _nop_();

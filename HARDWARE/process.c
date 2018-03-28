@@ -12,7 +12,7 @@ RS485_StatusTypeDef Debug_Process(u8* pbuff)
 //	if(driveTime > 0)
 //			timeOutCounter = TIMESTART;
 
-    if((pbuff[0] <= 3) && (pbuff[0] > 0))
+    if((pbuff[0] <= 4) && (pbuff[0] > 0))
     {   //电机驱动这里一块看情况改改，可以直接驱动p口
         MotorDriveDc(START, pbuff[0]);
         Delay_100ms(pbuff[1]);

@@ -27,20 +27,16 @@ void main()
     addr = ((P1 & 0x1c) >> 2);//读拨码开关地址
 
 //    CrcProtocol(RevData);
-    TransmitData_API("Uart Test !\r\n");
+    TransmitData_API("Uart Test !\r\n",0);
     while (1)
     {
-
-        if(RS485Time_1ms >= 150)
+        if(RS485Time_1ms >= 10)
         {
             RS485Time_1ms = 1;
             processResult = CrcProtocol(UART2RevData);
-//					  Uart2Send(processResult);//测试用，就看看到时候屏蔽
-
             if(processResult == RS485_OK)
             {
                 processResult = Protocol_Process(UART2RevData);
-//							  Uart2Send(processResult);//测试用，就看看到时候屏蔽
             }
             UART2RXDataLenth = 0;
             ResultSend(processResult);

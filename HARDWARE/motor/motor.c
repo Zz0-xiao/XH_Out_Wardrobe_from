@@ -8,7 +8,7 @@ void MotorInit()
 
     Res(MOROT1);
     Res(MOROT2);
-    Res(MOROT2);
+    Res(MOROT3);
 }
 
 
