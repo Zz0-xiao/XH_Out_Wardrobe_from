@@ -79,6 +79,7 @@ RS485_StatusTypeDef Protocol_Process(u8* pbuff)
 RS485_StatusTypeDef  ResultSend(RS485_StatusTypeDef result)
 {
     u8  ResultData[] = {0x00, 0x00};
+		ResultData[0]=addr;
     if(result == RS485_OK)
     {
         TransmitData_SDSES(0x00, 0x05, 0x70, ResultData);//正常
