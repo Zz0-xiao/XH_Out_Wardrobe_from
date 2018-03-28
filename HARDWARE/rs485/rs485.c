@@ -26,7 +26,7 @@ void Uart2Isr() interrupt 8
     {
         S2CON &= ~0x01;
         UART2RevData[UART2RXDataLenth++] = S2BUF;
-        if(UART2RXDataLenth > 16)
+        if(UART2RXDataLenth >= 16)
         {
             UART2RXDataLenth--;
             RS485Time_1ms = 0;
@@ -94,7 +94,6 @@ RS485_StatusTypeDef CrcProtocol(u8* pbuff)
 //    Uart2Send(crc % 256);
 //    Uart2Send(pbuff[lenth]);
 //    Uart2Send(pbuff[lenth + 1]);
-//    return 0;
     if((crc / 256 == pbuff[lenth]) && (crc % 256  == pbuff[lenth + 1]))
     {
 //        TransmitData_API("ok !", 0);//测试用，就看看到时候屏蔽

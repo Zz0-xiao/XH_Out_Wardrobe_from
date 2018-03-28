@@ -33,6 +33,7 @@ RS485_StatusTypeDef SendOut(u8* pbuff)
         return RS485_ERROR;
 
     processResult = MotorDriveDCs(pbuff[0]);
+
     return processResult;
 }
 

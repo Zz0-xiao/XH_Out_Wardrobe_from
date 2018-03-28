@@ -27,7 +27,7 @@ void main()
     addr = ((P1 & 0x1c) >> 2);//读拨码开关地址
 
 //    CrcProtocol(RevData);
-    TransmitData_API("Uart Test !\r\n",0);
+    TransmitData_API("Uart Test !\r\n", 0);
     while (1)
     {
         if(RS485Time_1ms >= 10)
@@ -67,7 +67,7 @@ RS485_StatusTypeDef Protocol_Process(u8* pbuff)
 
 RS485_StatusTypeDef  ResultSend(RS485_StatusTypeDef result)
 {
-    u8  ResultData[]={0x00,0x00};
+    u8  ResultData[] = {0x00, 0x00};
     if(result == RS485_OK)
     {
         TransmitData_SDSES(0x00, 0x05, 0x70, ResultData);///////////////
@@ -83,37 +83,3 @@ RS485_StatusTypeDef  ResultSend(RS485_StatusTypeDef result)
 //        TransmitData_API("ERROR BUSY", 0);
     return RS485_OK;
 }
-
-
-//        if(RS485Time_1ms > 10)
-//        {
-//            RS485Time_1ms = 0;
-//            cmdr = UART2RevData[0];
-//            switch(cmdr)
-//            {
-//            case 0x01:
-////            Uart2SendStr("111 !\r\n");
-////            TransmitData_API(RevData, 0);
-//                TransmitData_SDSES(0x03, 0x05, 0x73, aaa);
-//                break;
-//            case 0x02:
-//                CrcProtocol(RevData);
-//                break;
-//            case 0x03:
-//                TransmitData_API("U33 !\r\n", 0);
-//                break;
-//            case 0x04:
-//                Uart2Send(addr);
-//                Uart2Send(addr);
-//                break;
-//            case 0x05:
-//                TransmitData_API("555!\r\n", 2);
-//                break;
-//            default:
-//                break;
-//            }
-//            UART2RXDataLenth = 0;
-//            BuffReset_API(UART2RevData, 16);
-//        }
-
-

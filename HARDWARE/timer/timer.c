@@ -2,7 +2,7 @@
 #include "timer.h"
 
 u16 RS485Time_1ms = 1;
-u16 MotorTime_1ms = 1;
+u16 MotorTime_1ms = 0;
 void TM3_Isr() interrupt 19 
 {
    if(RS485Time_1ms > 0)
