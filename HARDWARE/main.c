@@ -10,10 +10,10 @@
 
 RS485_StatusTypeDef Protocol_Process(u8* pbuff);
 RS485_StatusTypeDef  ResultSend(RS485_StatusTypeDef result);
-//code u8  RevData[16] = {0x53, 0x44, 0x02, 0x05, 0x73 , 0x00, 0x01, 0x37, 0x1b};
+code u8  RevData[16] = {0x53, 0x44, 0x02, 0x05, 0x73 , 0x00, 0x01, 0x37, 0x1b};
 
-u8 addr;
-RS485_StatusTypeDef processResult;
+u8 addr, cmdr;
+RS485_StatusTypeDef processResult = RS485_INI;
 //53 44 02 05 73 00 01 6f 77;
 void main()
 {
@@ -25,18 +25,19 @@ void main()
     MotorInit();
 
     addr = ((P1 & 0x1c) >> 2);//读拨码开关地址
+
 //    CrcProtocol(RevData);
-//    Uart2SendStr("Uart Test !\r\n");
+    TransmitData_API("Uart Test !\r\n",0);
     while (1)
     {
         if(RS485Time_1ms >= 10)
         {
             RS485Time_1ms = 1;
             processResult = CrcProtocol(UART2RevData);
-            Uart2Send(processResult);//测试用，就看看到时候屏蔽
-            Uart2Send(processResult);//测试用，就看看到时候屏蔽
             if(processResult == RS485_OK)
+            {
                 processResult = Protocol_Process(UART2RevData);
+            }
             UART2RXDataLenth = 0;
             ResultSend(processResult);
             BuffReset_API(UART2RevData, 16);
@@ -66,14 +67,18 @@ RS485_StatusTypeDef Protocol_Process(u8* pbuff)
 
 RS485_StatusTypeDef  ResultSend(RS485_StatusTypeDef result)
 {
+    u8  ResultData[]={0x00,0x00};
     if(result == RS485_OK)
-        TransmitData_SDSES(0x00, 0x05, 0x70, 0x0000);///////////////
+    {
+        TransmitData_SDSES(0x00, 0x05, 0x70, ResultData);///////////////
+    }
     else  if(result == RS485_NO_GOODS)
-        TransmitData_SDSES(0x00, 0x05, 0x71, 0x0000);///////////////
+        TransmitData_SDSES(0x00, 0x05, 0x71, ResultData);///////////////
     else if(result == RS485_BLOCK)
-        TransmitData_SDSES(0x00, 0x05, 0x72, 0x0000);///////////////
+        TransmitData_SDSES(0x00, 0x05, 0x72, ResultData);///////////////
     else if(result == RS485_CRCERROR)
         TransmitData_API("CRC ERROR", 0);
+//				TransmitData_API("CRC ERROR", 0);
 //    if(result == RS485_BUSY)
 //        TransmitData_API("ERROR BUSY", 0);
     return RS485_OK;
