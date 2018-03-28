@@ -3,7 +3,7 @@
 
 #include "sys.h"
 #include "rs485.h"
-
+//电机管脚*3
 #define MOROT1     P15
 #define MOROT2     P16
 #define MOROT3     P17

@@ -6,6 +6,8 @@
 
 RS485_StatusTypeDef Debug_Process(u8* pbuff);
 RS485_StatusTypeDef SendOut(u8* pbuff);
+
+
 #endif
 
 

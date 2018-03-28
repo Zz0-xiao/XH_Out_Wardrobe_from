@@ -1,11 +1,18 @@
 #include <STC8.H>
 #include "timer.h"
 
-u16 RS485Time_1ms = 1;
-u16 MotorTime_1ms = 0;
-void TM3_Isr() interrupt 19 
+u16 RS485Time_1ms = 1;//串口超时时间
+u16 MotorTime_1ms = 0;//电机超时时间
+
+/*******************************
+名称：TM3_Isr()
+功能：定时器3中断函数
+参数：无
+返回：无
+*******************************/
+void TM3_Isr() interrupt 19
 {
-   if(RS485Time_1ms > 0)
+    if(RS485Time_1ms > 0)
         RS485Time_1ms++;
     if(MotorTime_1ms > 0)
         MotorTime_1ms++;
@@ -13,6 +20,12 @@ void TM3_Isr() interrupt 19
 //    P15 = !P15;
     AUXINTIF &= ~0x02;                          //清中断标志
 }
+/*******************************
+名称：TIM3_Initial()
+功能：定时器3初始化函数
+参数：无
+返回：无
+*******************************/
 
 void TIM3_Initial()     //1毫秒@24.000MHz
 {

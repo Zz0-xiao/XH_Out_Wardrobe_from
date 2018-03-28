@@ -1,6 +1,13 @@
 #include "motor.h"
 #include "delay.h"
 #include "timer.h"
+
+/*******************************
+名称：MotorInit()
+功能：电机管脚初始化，包括设置为0
+参数：无
+返回：无
+*******************************/
 void MotorInit()
 {
     P3_Mode_OUT_PP(MOROT1 | MOROT2 | MOROT3); //
@@ -10,7 +17,13 @@ void MotorInit()
     Res(MOROT3);
 }
 
-
+/*******************************
+名称：MotorDriveDc()
+功能：控制电机
+参数：motor_mode 电机模式start为启动(为0x01)，其他为停止
+number  番外为0x00-0x04，共三个电机，0x04为全部控制
+返回：无
+*******************************/
 void MotorDriveDc(u8 motor_mode , u8 number )
 {
     if(motor_mode == START)
@@ -45,6 +58,12 @@ void MotorDriveDc(u8 motor_mode , u8 number )
     }
 }
 
+/*******************************
+名称：MotorDriveDCs()
+功能：发货控制电机用，感应到传感器就停止或者超时
+参数：motorDCNum  电机序号
+返回：RS485_StatusTypeDef
+*******************************/
 
 RS485_StatusTypeDef MotorDriveDCs(u8 motorDCNum)
 {
