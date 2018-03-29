@@ -34,13 +34,24 @@ void delay_init()
 ************************************************/
 //void Delay_10us(unsigned int us)
 //{
-//	unsigned char i;
-//  while( us--)
-//  {
-//		i = 40;
-//		while (--i);
-//  }
+//    unsigned char i;
+//    while( us--)
+//    {
+//        i = 40;
+//        while (--i);
+//    }
 //}
+
+void Delay_10us(unsigned int us)		//@11.0592MHz
+{
+    unsigned char i;
+    while(us--)
+    {
+        i = 35;
+        while (--i);
+    }
+}
+
 /***********************************************
 函数名称：Delay_ms
 功    能：STC8系列单片机1ms延时程序
@@ -48,26 +59,62 @@ void delay_init()
 返 回 值：无
 备    注：示波器实测：1.01ms，内部时钟：24MHz
 ************************************************/
-void Delay_ms(unsigned int ms)
+//void Delay_ms(unsigned int ms)
+//{
+//    unsigned int i;
+//    while( (ms--) != 0)
+//    {
+//        for(i = 0; i < 1850; i++);
+//    }
+//}
+
+void Delay_ms(unsigned int ms)		//@11.0592MHz
 {
-    unsigned int i;
-    while( (ms--) != 0)
+    unsigned char i, j;
+    while(ms--)
     {
-        for(i = 0; i < 1850; i++);
+        i = 15;
+        j = 90;
+        do
+        {
+            while (--j);
+        } while (--i);
     }
 }
 
 
-void Delay_100ms(unsigned int ms)		//@24.000MHz
+
+
+//void Delay_100ms(unsigned int ms)		//@24.000MHz
+//{
+//    unsigned char i, j, k;
+//    while((ms--) != 0)
+//    {
+//        _nop_();
+//        _nop_();
+//        i = 13;
+//        j = 45;
+//        k = 214;
+//        do
+//        {
+//            do
+//            {
+//                while (--k);
+//            } while (--j);
+//        } while (--i);
+//    }
+//}
+
+
+void Delay_100ms(unsigned int ms)		//@11.0592MHz
 {
     unsigned char i, j, k;
-    while((ms--) != 0)
+    while(ms--)
     {
         _nop_();
-        _nop_();
-        i = 13;
-        j = 45;
-        k = 214;
+        i = 6;
+        j = 157;
+        k = 59;
         do
         {
             do

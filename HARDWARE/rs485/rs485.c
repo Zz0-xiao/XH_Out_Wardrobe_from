@@ -4,14 +4,15 @@
 #include "utility.h"
 #include "string.h"
 #include "timer.h"
-
+#include "delay.h"
 bit busy;    //串口忙
 u8 UART2RevData[16];//串口2接收到的数据
 u8 UART2RXDataLenth = 0;//串口2接收数据的长度
 
 //<神思协议定义
 //<s>协议头
-u8 HEAD[] =  "SD";
+//u8 HEAD[] =  "SD";
+u8 code HEAD[] = {0x53, 0x44};
 u8 HEADSIZE = 2;
 
 /*******************************
@@ -34,7 +35,7 @@ void Uart2Isr() interrupt 8
         if(UART2RXDataLenth >= 16)//这里要=也加上不加上会出错
         {
             UART2RXDataLenth--;
-            RS485Time_1ms = 0;//超市停止计时，不过好像还会计时，先放着
+            RS485Time_1ms = 500;//让主函数清除下接收数据
         }
         else
             RS485Time_1ms = 1; //每个字节接收都把他复位
@@ -54,12 +55,25 @@ void Uart2Init()
 
     Res(RS485EN);    //默认位接收模式
 
-    IE2 |= 0x01;			// 允许串口2中断
-    S2CON = 0x50;
-    T2L = BRT;
-    T2H = BRT >> 8;
-    AUXR = 0x14;
+//    IE2 |= 0x01;			// 允许串口2中断
+//    S2CON = 0x50;
+//    T2L = BRT;
+//    T2H = BRT >> 8;
+//    AUXR = 0x14;
     busy = 0;
+
+    S2CON &= ~(1 << 7);										//8位数据
+    P_SW2 &= ~1;												//UART2 使用P1.0 P1.1口	默认
+
+    AUXR &= ~(1 << 4);										//Timer stop
+    AUXR &= ~(1 << 3);										//Timer2 set As Timer
+    AUXR |=  (1 << 2);										//Timer2 set as 1T mode
+    TH2 = BRT >> 8;
+    TL2 = BRT;
+    IE2   |=  1;												//允许中断
+    S2CON |=  (1 << 4);										//允许接收
+    AUXR |=  (1 << 4);
+
 }
 
 /*******************************
@@ -70,8 +84,8 @@ void Uart2Init()
 *******************************/
 void Uart2Send(char dat)
 {
-    Set(RS485EN);
-
+//    Set(RS485EN);
+//		Delay_10us(1);
     while (busy);//这里到时候加入超时 算了，不加了麻烦
     busy = 1;
     _nop_();
@@ -79,7 +93,8 @@ void Uart2Send(char dat)
     S2BUF = dat;
     _nop_();
     _nop_();
-    Res(RS485EN);
+//    Res(RS485EN);
+//		Delay_10us(1);
 }
 
 
@@ -100,8 +115,8 @@ RS485_StatusTypeDef CrcProtocol(u8* pbuff)
     if(pbuff[2] != addr) // 判断是不是当前地址
     {
 //       TransmitData_API("addrErro !\r\n", 0);//测试用，就看看到时候屏蔽
-			Uart2Send(pbuff[2]);
-						Uart2Send(pbuff[2]);
+//			Uart2Send(pbuff[2]);
+//			Uart2Send(pbuff[2]);
         return RS485_INI;  //地址错误返回默认
     }
     lenth =  pbuff[HEADSIZE + 1 ] + 2;////头+2，地址+1，长度+1，校验-2
@@ -116,7 +131,7 @@ RS485_StatusTypeDef CrcProtocol(u8* pbuff)
         return RS485_OK;
     } else
     {
-//        TransmitData_API("ERRO !", 0); //测试用，就看看到时候屏蔽
+//        TransmitData_API("ERRO !", 0); //测试用，就看看到时候屏蔽101
         return RS485_CRCERROR; //返回crc错误
     }
 }
@@ -131,10 +146,16 @@ void TransmitData_API(const void* dat, u16 datasize)
 {
     u16 i;
     u8* pdat = (u8*) dat;
+
+    Set(RS485EN);
+    Delay_10us(1);
+	
     if(datasize == 0)
         datasize = strlen((char*)pdat) ;
     for(i = 0; i <= datasize; i++)
         Uart2Send(pdat[i]);
+
+    Res(RS485EN);
 }
 
 /*******************************
@@ -146,13 +167,14 @@ void TransmitData_API(const void* dat, u16 datasize)
 			data  发送数据,协议内容，只是data数据，或数组
 返回：HAL_StatusTypeDef communication.h
 *******************************/
-u8 SendBuff[16];
+
 void TransmitData_SDSES(u8 address , u8  len, u8 cmdr , const void* dat)
 {
     u16 crc16 = 0;
     u8 sendLen = 0;
     u8 crc[2];
 
+    u8 SendBuff[16];
     u8* pdat = (u8*) dat;
 
     if(len == 0)

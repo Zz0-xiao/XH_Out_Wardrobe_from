@@ -3,7 +3,8 @@
 
 #include "sys.h"
 
-#define FOSC 24000000UL     //系统时钟
+//#define FOSC 24000000UL     //系统时钟
+#define FOSC   11059200UL     //系统时钟
 #define BRT (65536-FOSC/9600/4)//波特率设置
 
 #define RS485EN     P37    //485发送接收控制脚

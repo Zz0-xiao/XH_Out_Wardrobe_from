@@ -28,12 +28,12 @@ void main()
     addr = ((P1 & 0x1c) >> 2);//读拨码开关地址
 
 //    CrcProtocol(RevData);
-    TransmitData_API("Uart Test !\r\n", 0);
+//    TransmitData_API("Uart Test !\r\n", 0);
     while (1)
     {
-        if(RS485Time_1ms >= 10)
+        if(RS485Time_1ms >= 100)
         {
-            RS485Time_1ms = 1;
+            RS485Time_1ms = 0;
             processResult = CrcProtocol(UART2RevData);
             if(processResult == RS485_OK)
             {
@@ -79,7 +79,7 @@ RS485_StatusTypeDef Protocol_Process(u8* pbuff)
 RS485_StatusTypeDef  ResultSend(RS485_StatusTypeDef result)
 {
     u8  ResultData[] = {0x00, 0x00};
-		ResultData[0]=addr;
+    ResultData[0] = addr;
     if(result == RS485_OK)
     {
         TransmitData_SDSES(0x00, 0x05, 0x70, ResultData);//正常
@@ -90,8 +90,10 @@ RS485_StatusTypeDef  ResultSend(RS485_StatusTypeDef result)
         TransmitData_SDSES(0x00, 0x05, 0x72, ResultData);//卡货
     else if(result == RS485_CRCERROR)
         TransmitData_API("CRC ERROR", 0);///crc校验错误
+//		else if(result == RS485_HEADERROR)
+		//        TransmitData_API("RS485_HEADERROR", 0);///这个不能加上，不然要出问题相互发了
 //				TransmitData_API("CRC ERROR", 0);
 //    if(result == RS485_BUSY)
 //        TransmitData_API("ERROR BUSY", 0);
-    return RS485_OK;
+    return RS485_INI;
 }
