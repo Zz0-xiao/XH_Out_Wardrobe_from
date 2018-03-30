@@ -149,7 +149,7 @@ void TransmitData_API(const void* dat, u16 datasize)
 
     Set(RS485EN);
     Delay_10us(1);
-	
+
     if(datasize == 0)
         datasize = strlen((char*)pdat) ;
     for(i = 0; i <= datasize; i++)
